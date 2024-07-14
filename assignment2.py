@@ -74,4 +74,4 @@ def e(x):
         if found==False:
             word_count.append([word,1])
     return word_count
-print("ccurrences of each word in a given string",e(string))
+print("occurences of each word in a given string",e(string))
