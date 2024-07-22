@@ -2,8 +2,12 @@ class stringanalyser:
     def __init__(self,string,character,substring):
         self.string=string
         self.character=character
-        self.subtring=substring
-
+        self.substring=substring
+    def length(x):
+        count=0
+        for i in x.string:
+            count+=1
+        return count
     def split(self):
         string_split = []
         current_word = ''
@@ -18,7 +22,7 @@ class stringanalyser:
             string_split+=[current_word]
         return string_split
 #a) To display word with the longest length
-    def length(self):
+    def long_length(self):
         len_list = []
         y =self.split()
         for i in y:
@@ -44,21 +48,25 @@ class stringanalyser:
                 count+=1
         return count
 #c) To check whether given string is palindrome or not
-    def palin(self):
-        y=self.string[::-1]
-        if(self.string==y):
-            print(f"{self.string}is a palindrome")
-        else:
-            print(f"{self.string} is not a palindrome")
+    def is_palindrome(self):
+        left, right = 0,self.length()-1
+        while left < right:
+            if self.string[left]!=self.string[right]:
+                return False
+            right+=1
+            left-=1
+        return True
 #d) To display index of first appearance of the substring
-    def sub(self):
-        count=0
-        for i in self.string:
-            if i==self.subtring:
-                break
-            else:
-                count+=1
-        return count
+    def find_substring_index(self):
+        for i in range(len(self.string) - len(self.substring) + 1):
+            match = True
+            for j in range(len(substring)):
+                if string[i + j] != substring[j]:
+                    match = False
+                    break
+            if match:
+                return i
+        return -1
 #e) To count the occurrences of each word in a given string
     def e(self):
         words=self.split()
@@ -84,12 +92,16 @@ print("5-to find occurrences of each word in a given string")
 operation=int(input("enter the operation no to be performed\n"))
 obj=stringanalyser(string,character,substring)
 if operation==1:
-    print("display word with the longest length:",obj.length())
+    print("display word with the longest length:",obj.long_length())
 if operation==2:
     print(f"the frequency of occurrence of character  {character} in the string",obj.freq())
 if operation==3:
-    obj.palin()
+    if(obj.is_palindrome()==True):
+        print("Palindrome")
+    else:
+        print("NOT PALINDROME")
 if operation==4:
-    print(f"index of first appearance of the substring {substring} is",obj.sub())
+    print(f"index of first appearance of the substring {substring} is",obj.find_substring_index())
 if operation==5:
     print("occurrences of each word in a given string",obj.e())
+
