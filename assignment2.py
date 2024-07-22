@@ -58,15 +58,15 @@ class stringanalyser:
         return True
 #d) To display index of first appearance of the substring
     def find_substring_index(self):
-        for i in range(len(self.string) - len(self.substring) + 1):
-            match = True
-            for j in range(len(substring)):
-                if string[i + j] != substring[j]:
-                    match = False
-                    break
-            if match:
-                return i
-        return -1
+        y=self.split()
+        count=0
+        for i in y:
+            if i==self.substring:
+                return count
+            else:
+                for j in i:
+                    count+=1
+                count+=1
 #e) To count the occurrences of each word in a given string
     def e(self):
         words=self.split()
