@@ -1,103 +1,115 @@
 class matrix:
-    def __init__(self,a,b):
-        self.a=a
-        self.b=b
-    def input_matrix(a,b):
-        matrix1=[]
+    def __init__(self, a, b):
+        self.a = a#rows
+        self.b = b#cols
+
+    def length(self, m1):
+        count = 0
+        for i in m1:
+            for j in i:
+                count += 1
+        return count
+
+    def input_matrix(self, a, b):
+        matrix1 = []
         for i in range(a):
-            list1=[]
+            list1 = []
             for j in range(b):
-                element=int(input(f"element {i}{j}:"))
-                list1.append(element)
-            matrix1.append(list1)
-        for i in range(len(matrix1)):
-            print(matrix1[i])
+                element = int(input(f"element {i}{j}:"))
+                list1+=[element]
+            matrix1+=[list1]
+        for i in matrix1:
+            for j in i:
+                print(j,end="")
+            print()
         return matrix1
-    def subtraction(m1,m2):
-        result=[]
-        k=0
-        for i in range(len(m1)):
-            rowresult=[]
-            for j in range(len(m1[i])):
-                k=m1[i][j]-m2[i][j]
-                rowresult.append(k)
-            result.append(rowresult)
+    def addition(self, m1, m2):
+        result = []
+        k = 0
+        for i in range(self.a):
+            row_result = []
+            for j in range(self.b):
+                k = m1[i][j] + m2[i][j]
+                row_result+=[k]
+            result+=[row_result]
         return result
-    def multiplication(m1,m2):
-        resultmul=[]
-        for i in range(len(m1)):
-            l2=[]
-            for j in range(len(m2[0])):
-                k1=0
-                for k in range(len(m2)):
-                    k1 += m1[i][k]*m2[k][j]    
-                l2.append(k1)
-            resultmul.append(l2)
-        return resultmul
-    def transpose(m1):
-        resulttrans=[]
-        if len(m1)>=len(m1[1]):
-            for i in range(len(m1)):
-                l1=[]
-                k=0
-                for j in range(len(m1[i])):
-                    k = m1[j][i]
-                    l1.append(k)
-                resulttrans.append(l1)
-        else:
-            for i in range(len(m1[1])):
-                l1=[]
-                k=0
-                for j in range(len(m1)):
-                    k = m1[j][i]
-                    l1.append(k)
-                resulttrans.append(l1)
-        return resulttrans
-        
-print("enter dimension of first matrix")
-a=int(input("enter no of rows "))
-b=int(input("enter no of columns "))
-m1=matrix.input_matrix(a,b)
-print("1-additon")
-print("2-subtraction")
-print("3-multiplication")
-print("4-transpose")
-print("5-exit")
-operation=int(input("enter the operation number"))
-if(operation==1):
-    print("enter dimensions of second matrix")
-    c=int(input("enter no of columns "))
-    d=int(input("enter no of columns "))
-    if(a==c and b==d):
-        print("addition is possible")
-        m2=matrix.input_matrix(c,d)
-        print("the addition of 2 matrices is ",matrix.addition(m1,m2))
+
+    def subtraction(self, m1, m2):
+        result = []
+        k = 0
+        for i in range(self.a):
+            row_result = []
+            for j in range(self.b):
+                k = m1[i][j] - m2[i][j]
+                row_result+=[k]
+            result+=[row_result]
+        return result
+
+    def multiplication(self, m1, m2):
+        result_mul = []
+        for i in range(self.a):
+            l2 = []
+            for j in range(self.b):
+                k1 = 0
+                for k in range(self.b):
+                    k1 += m1[i][k] * m2[k][j]
+                l2+=[k1]
+            result_mul+=[l2]
+        return result_mul
+
+    def transpose(self, m1):
+        result_trans = []
+        for i in range(self.b):
+            l1 = []
+            for j in range(self.a):
+                k = m1[j][i]
+                l1+=[k]
+            result_trans+=[l1]
+        return result_trans
+
+print("Enter dimensions of the first matrix:")
+a = int(input("Enter the number of rows: "))
+b = int(input("Enter the number of columns: "))
+m1 = matrix(a,b).input_matrix(a, b)
+
+print("1 - Addition")
+print("2 - Subtraction")
+print("3 - Multiplication")
+print("4 - Transpose")
+print("5 - Exit")
+operation = int(input("Enter the operation number: "))
+
+if operation == 1:
+    print("Enter dimensions of the second matrix:")
+    c = int(input("Enter the number of rows: "))
+    d = int(input("Enter the number of columns: "))
+    if a == c and b == d:
+        print("Addition is possible.")
+        m2 = matrix(c,d).input_matrix(c, d)
+        print("The addition of the two matrices is:", matrix(a,b).addition(m1, m2))
     else:
-        print("addition is not possible")
-elif(operation==2):
-    print("enter dimensions of second matrix")
-    c=int(input("enter no of columns "))
-    d=int(input("enter no of columns "))
-    if(a==c and b==d):
-        print("subtraction is possible")
-        m2=matrix.input_matrix(c,d)
-        print("the subtraction of matrices is",matrix.subtraction(m1,m2))
+        print("Addition is not possible.")
+elif operation == 2:
+    print("Enter dimensions of the second matrix:")
+    c = int(input("Enter the number of rows: "))
+    d = int(input("Enter the number of columns: "))
+    if a == c and b == d:
+        print("Subtraction is possible.")
+        m2 = matrix().input_matrix(c, d)
+        print("The subtraction of matrices is:", matrix(a,b).subtraction(m1, m2))
     else:
-        print("subtraction not possible")
-elif(operation==3):
-    print("enter dimensions of second matrix")
-    c=int(input("enter no of columns "))
-    d=int(input("enter no of columns "))
-    if(b==c):
-        print("multiplication is possible")
-        m2=matrix.input_matrix(c,d)
-        print("the multiplication result is",matrix.multiplication(m1,m2))
+        print("Subtraction is not possible.")
+elif operation == 3:
+    print("Enter dimensions of the second matrix:")
+    c = int(input("Enter the number of rows: "))
+    d = int(input("Enter the number of columns: "))
+    if b == c:
+        print("Multiplication is possible.")
+        m2 = matrix(a,b).input_matrix(c, d)
+        print("The multiplication result is:", matrix(a,b).multiplication(m1, m2))
     else:
-        print("multiplication not possible")
-elif(operation==4):
-    print(f"the transpose the matrix {m1} is",matrix.multiplication(m1,m2))
+        print("Multiplication is not possible.")
+elif operation == 4:
+    print(f"The transpose of the matrix {m1} is:", matrix(a,b).transpose(m1))
 else:
     pass
-
-
-
