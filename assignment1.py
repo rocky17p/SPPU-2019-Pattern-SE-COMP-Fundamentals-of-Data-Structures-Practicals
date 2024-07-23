@@ -1,15 +1,18 @@
-Experiment No. 1 : In a second year computer engineering class, group A students play cricket, group B students play
-                   badminton and group C students play football.
-                   Write a python program using functions to compute following:
-                   a) List of students who play both cricket and badminton.
-                   b) List of students who play either cricket or badminton but not both.
-                   c) Number of students who play neither cricket nor badminton.
-                   d) Number of students who play cricket and football but not badminton.
-(NOTE : While realising the group, duplicate entries should be avoided. Do not use SET built-in functions)
-
-cricketlist=list(map(str,input("enter list of students playing cricket ").split()))
-badmintonlist=list(map(str,input("enter list of students playing badminton ").split()))
-footballlist=list(map(str,input("enter list of students playing football ").split()))
+cricketlist=[]
+badmintonlist=[]
+footballlist=[]
+x=int(input("enter no of students playing cricket "))
+for i in range(x):
+    s=int(input("student roll no "))
+    cricketlist+=[s]
+y=int(input("enter no of students playing badminton "))
+for i in range(y):
+    s=int(input("student roll no "))
+    badmintonlist+=[s]
+z=int(input("enter no of students playing football list "))
+for i in range(z):
+    s=int(input("student roll no "))
+    footballlist+=[s]
 def intersection(a,b):
     result=[] 
     for i in a:
@@ -68,7 +71,7 @@ def c(a,b,c):
         if found==False:
             result4+=[i]
     return len(result4)
-print(" c) Number of students who play neither cricket nor badminton",c(cricketlist,badmintonlist,footballlist))
+print("c) Number of students who play neither cricket nor badminton",c(cricketlist,badmintonlist,footballlist))
 def d(a,b,c):
     x=uni(a,c)
     result=[]
