@@ -1,88 +1,206 @@
-#include <iostream>
-#include <iomanip>
-#include <vector>
+#include "iostream"
+#include "vector"
+
 using namespace std;
+
 class node
 {
 public:
-    float time;
-    float duration;
-    node *next;
-    bool isbooked;
-    node(float x, float y, bool booked = false)
-    {
-        time = x;
-        next = nullptr;
-        duration = y;
-        isbooked = booked;
-    }
+	int data;
+	node *next;
+
+public:
+	node()
+	{
+		data = 0;
+		next = nullptr;
+	}
+	node(int data1, node *next1)
+	{
+		data = data1;
+		next = next1;
+	}
+	node(int data1)
+	{
+		data = data1;
+		next = nullptr;
+	}
 };
-node *makeschedule()
+
+node *convertarraytolinkedlist(vector<int> &arr)
 {
-    node *head = new node(10.00, 1.00);
-    node *temp = head;
-    float count = 11.00;
-    while (count <= 17.00)
-    {
-        if (count == 13.00)
-        {
-            count += 1.00;
-            continue;
-        }
-        node *newnode = new node(count, 1.00);
-        temp->next = newnode;
-        count += 1.00;
-        temp = newnode;
-    }
-    return head;
+	if (arr.empty())
+		return nullptr;
+	node *head = new node(arr[0]);
+	node *current = head;
+	for (int i = 1; i < arr.size(); i++)
+	{
+		current->next = new node(arr[i]);
+		current = current->next;
+	}
+	return head;
 }
-void displayschedule(node *head)
+
+void print(node *head)
 {
-    node *temp = head;
-    while (temp)
-    {
-        cout << fixed << setprecision(2) << temp->time << " to " << temp->time +temp->duration << " : " << (temp->isbooked ?"booked":"free") << endl;
-        temp = temp->next;
-    }
+	node *temp = head;
+	while (temp)
+	{
+		cout << temp->data << " ";
+		temp = temp->next;
+	}
+	cout << endl;
 }
-void makeappointment(float time,float duration , node *head)
+
+node *both(node *head1, node *head2)
 {
-    node *temp = head;
-    node *prev=nullptr;
-    while (temp)
-    {
-        if (temp->time == time)
-        {
-            if (!temp->isbooked)
-            {
-                temp->isbooked = true;
-                temp->duration=duration;
-                break;
-            }
-            else
-            {
-                cout <<fixed<<setprecision(2)<< "the slot is already booked from "<<temp->time <<" to "<<temp->time+temp->duration << endl;
-                break;
-            }
-        }
-        prev=temp;
-        temp = temp->next;
-    }
-    node *newnode= new node(time,duration,true);
-    prev->next=newnode;
-    cout << "Appointment booked from " << fixed << setprecision(2) << newnode->time << " to " << newnode->time + newnode->duration << endl;
+	cout << "Students who like both vanilla and butterscotch are: ";
+	node *temp1 = head1;
+	node *commonHead = nullptr;
+	node *commonTail = nullptr;
+
+	while (temp1)
+	{
+		node *temp2 = head2;
+		while (temp2)
+		{
+			if (temp1->data == temp2->data)
+			{
+				node *newNode = new node(temp1->data);
+				if (commonHead == nullptr)
+				{
+					commonHead = newNode;
+					commonTail = newNode;
+				}
+				else
+				{
+					commonTail->next = newNode;
+					commonTail = newNode;
+				}
+				cout << temp1->data << " ";
+				break;
+			}
+			temp2 = temp2->next;
+		}
+		temp1 = temp1->next;
+	}
+	cout << endl;
+	return commonHead;
 }
+
+node *either(node *common, node *head1, node *head2)
+{
+	cout << "Students who like either vanilla or butterscotch but not both are: ";
+	node *temp1 = head1;
+	node *temp2 = head2;
+
+	while (temp1)
+	{
+		bool found = false;
+		node *temp3 = common;
+		while (temp3)
+		{
+			if (temp1->data == temp3->data)
+			{
+				found = true;
+				break;
+			}
+			temp3 = temp3->next;
+		}
+		if (!found)
+		{
+			cout << temp1->data << " ";
+		}
+		temp1 = temp1->next;
+	}
+
+	while (temp2)
+	{
+		bool found = false;
+		node *temp3 = common;
+		while (temp3)
+		{
+			if (temp2->data == temp3->data)
+			{
+				found = true;
+				break;
+			}
+			temp3 = temp3->next;
+		}
+		if (!found)
+		{
+			cout << temp2->data << " ";
+		}
+		temp2 = temp2->next;
+	}
+	cout << endl;
+	return nullptr;
+}
+
+int count(node *head)
+{
+	node *temp = head;
+	int count = 0;
+	while (temp)
+	{
+		temp = temp->next;
+		count++;
+	}
+	return count;
+}
+
 int main()
 {
-    node *head = makeschedule();
-    displayschedule(head);
-    float time;
-    cout << "enter the time for booking slot" << endl;
-    cin>>time;
-    float duration;
-    cout<<"enter the duration of slot"<<endl;
-    cin>>duration;
-    makeappointment(time,duration,head);
-    displayschedule(head);
-    return 0;
+	int size;
+	cout<<"enter the number of students "<<endl;
+	cin>>size;
+	cout<<"enter the size"<<endl;
+	vector<int> arr;
+	for(int i=0;i<size;i++){
+		int x;
+		cout<<"element "<<i<<":";
+		cin>>x;
+		arr.push_back(x);
+	}
+	int size1;
+	cout<<"enter the number of students "<<endl;
+	cin>>size1;
+	cout<<"enter the students"<<endl;
+	vector<int> arr1;
+	for(int i=0;i<size1;i++){
+		int x;
+		cout<<"element "<<i<<":";
+		cin>>x;
+		arr1.push_back(x);
+	}
+	int size2;
+	cout<<"enter the number of students "<<endl;
+	cin>>size2;
+	cout<<"enter the students"<<endl;
+	vector<int> arr2;
+	for(int i=0;i<size2;i++){
+		int x;
+		cout<<"element "<<i<<":";
+		cin>>x;
+		arr2.push_back(x);
+	}
+
+	node *head = convertarraytolinkedlist(arr);
+	node *head1 = convertarraytolinkedlist(arr1);
+	node *head2 = convertarraytolinkedlist(arr2);
+
+	print(head1);
+	print(head2);
+
+	node *common = both(head1, head2);
+	node *notcommon = either(common, head1, head2);
+
+	int count1 = count(head);
+	int count2 = count(head1);
+	int count3 = count(head2);
+	int count4 = count(common);
+	int final=count1 -count2 -count3 +count4;
+	cout << "Number of students who like neither vanilla nor butterscotch: " <<final << endl;
+
+	return 0;
 }
