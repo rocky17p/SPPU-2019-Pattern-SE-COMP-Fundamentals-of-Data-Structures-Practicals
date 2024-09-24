@@ -1,157 +1,206 @@
-//============================================================================
-// Name        : xyz.cpp
-// Author      : 
-// Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
-//============================================================================
+#include "iostream"
+#include "vector"
 
+using namespace std;
 
-#include<iostream>
-#include<vector>
-using namespace std ;
-class node{
-    public:
-    int seatno;
-    int row;
-    bool isbooked;
-    node *next;
-    node *prev;
-    node(int x,int y,bool booked=false){
-        seatno=x;
-        row=y;
-        isbooked=booked;
-        next=nullptr;
-        prev=nullptr;
-    }
-};
-        node *rows[10];
-class theater{
+class node
+{
 public:
-	void maketheater(){
-	    for(int i=0;i<10;i++){
-	        node *head= new node(1,i+1);
-	        node *temp = head;
-	        rows[i]=head;
-	        for(int j=2;j<=7;j++){
-	            node *nextseat= new node(j,i+1);
-	            temp->next= nextseat;
-	            nextseat->prev= temp;
-	            temp=nextseat;
-	        }
-	        temp->next=head;
-	        head->prev=temp;
-	    }
-	}
-	void displayseats(){
-	    for (int i = 0; i < 10; i++)
-	    {
-	        node *current = rows[i];
-	        cout << "Row " << i + 1 << ": ";
-	        do
-	        {
-	            if (!current->isbooked)
-	            {
-	                cout << current->seatno << " ";
-	            }
-	            current = current->next;
-	        } while (current != rows[i]);
-	        cout << endl;
-	    }
-	}
-	void bookseats(int row,int seatnos){
-		node *current=rows[row-1];
-		int count=0;
-		while(current)
-		{
-			if(!current->isbooked){
-				count++;
-				current=current->next;
-			}
-			else if(current->isbooked){
-				count=0;
-				current=current->next;
+	int data;
+	node *next;
 
-			}
-			if(count==seatnos){
+public:
+	node()
+	{
+		data = 0;
+		next = nullptr;
+	}
+	node(int data1, node *next1)
+	{
+		data = data1;
+		next = next1;
+	}
+	node(int data1)
+	{
+		data = data1;
+		next = nullptr;
+	}
+};
+
+node *convertarraytolinkedlist(vector<int> &arr)
+{
+	if (arr.empty())
+		return nullptr;
+	node *head = new node(arr[0]);
+	node *current = head;
+	for (int i = 1; i < arr.size(); i++)
+	{
+		current->next = new node(arr[i]);
+		current = current->next;
+	}
+	return head;
+}
+
+void print(node *head)
+{
+	node *temp = head;
+	while (temp)
+	{
+		cout << temp->data << " ";
+		temp = temp->next;
+	}
+	cout << endl;
+}
+
+node *both(node *head1, node *head2)
+{
+	cout << "Students who like both vanilla and butterscotch are: ";
+	node *temp1 = head1;
+	node *commonHead = nullptr;
+	node *commonTail = nullptr;
+
+	while (temp1)
+	{
+		node *temp2 = head2;
+		while (temp2)
+		{
+			if (temp1->data == temp2->data)
+			{
+				node *newNode = new node(temp1->data);
+				if (commonHead == nullptr)
+				{
+					commonHead = newNode;
+					commonTail = newNode;
+				}
+				else
+				{
+					commonTail->next = newNode;
+					commonTail = newNode;
+				}
+				cout << temp1->data << " ";
 				break;
 			}
+			temp2 = temp2->next;
 		}
-		current=current->prev;
-		while(count--){
-			current->isbooked=true;
-			current=current->prev;
-		}
+		temp1 = temp1->next;
 	}
-	void cancelseat(int row, int seatno)
+	cout << endl;
+	return commonHead;
+}
+
+node *either(node *common, node *head1, node *head2)
+{
+	cout << "Students who like either vanilla or butterscotch but not both are: ";
+	node *temp1 = head1;
+	node *temp2 = head2;
+
+	while (temp1)
 	{
-	    node *current = rows[row - 1];
-	    bool found = false;
-	    do
-	    {
-	        if (current->seatno == seatno)
-	        {
-	            found = true;
-	            if (current->isbooked)
-	            {
-	                current->isbooked = false;
-	                cout << "seat" << seatno << "row" << row << " booking cancelled" << endl;
-	            }
-	            else
-	            {
-	                cout << "the seat is not booked" << endl;
-	            }
-	        }
-	    } while (current != rows[row - 1]);
-	    if (!found)
-	    {
-	        cout << "seat not found" << endl;
-	    }
+		bool found = false;
+		node *temp3 = common;
+		while (temp3)
+		{
+			if (temp1->data == temp3->data)
+			{
+				found = true;
+				break;
+			}
+			temp3 = temp3->next;
+		}
+		if (!found)
+		{
+			cout << temp1->data << " ";
+		}
+		temp1 = temp1->next;
 	}
-};
-int main () {
-theater t;
-    t.maketheater();
-    int choice;
-    int rowno,seatno;
-    do
-    {
-        cout << "menu" << endl;
-        cout << "1.bookseat" << endl;
-        cout << "2.cancelbooking" << endl;
-        cout << "3.display available seats" << endl;
-        cout << "4.exit" << endl;
-        cin >> choice;
-        switch (choice)
-        {
-        case 1:{
 
-            cout << "enter the row no(1-10)" << endl;
-            cin >> rowno;
-            int noseats;
-            cout << "enter the no of seats to book" << endl;
-            cin >> noseats;
+	while (temp2)
+	{
+		bool found = false;
+		node *temp3 = common;
+		while (temp3)
+		{
+			if (temp2->data == temp3->data)
+			{
+				found = true;
+				break;
+			}
+			temp3 = temp3->next;
+		}
+		if (!found)
+		{
+			cout << temp2->data << " ";
+		}
+		temp2 = temp2->next;
+	}
+	cout << endl;
+	return nullptr;
+}
 
-            t.bookseats(rowno,noseats);
-            break;
-        }
-        case 2:
-            cout << "enter the row no(1-10)" << endl;
-            cin >> rowno;
-            cout << "enter the seat number(1-7):" << endl;
-            cin >> seatno;
-            t.cancelseat(rowno, seatno);
-            break;
-        case 3:
-            t.displayseats();
-            break;
-        case 4:
-            exit(0);
-            break;
-        default:
-            cout << "invalid choice enter from(1-4)" << endl;
-            break;
-        }
-    } while (choice != 4);
-    return 0;
+int count(node *head)
+{
+	node *temp = head;
+	int count = 0;
+	while (temp)
+	{
+		temp = temp->next;
+		count++;
+	}
+	return count;
+}
+
+int main()
+{
+	int size;
+	cout<<"enter the number of students "<<endl;
+	cin>>size;
+	cout<<"enter the size"<<endl;
+	vector<int> arr;
+	for(int i=0;i<size;i++){
+		int x;
+		cout<<"element "<<i<<":";
+		cin>>x;
+		arr.push_back(x);
+	}
+	int size1;
+	cout<<"enter the number of students "<<endl;
+	cin>>size1;
+	cout<<"enter the students"<<endl;
+	vector<int> arr1;
+	for(int i=0;i<size1;i++){
+		int x;
+		cout<<"element "<<i<<":";
+		cin>>x;
+		arr1.push_back(x);
+	}
+	int size2;
+	cout<<"enter the number of students "<<endl;
+	cin>>size2;
+	cout<<"enter the students"<<endl;
+	vector<int> arr2;
+	for(int i=0;i<size2;i++){
+		int x;
+		cout<<"element "<<i<<":";
+		cin>>x;
+		arr2.push_back(x);
+	}
+
+	node *head = convertarraytolinkedlist(arr);
+	node *head1 = convertarraytolinkedlist(arr1);
+	node *head2 = convertarraytolinkedlist(arr2);
+
+	print(head1);
+	print(head2);
+
+	node *common = both(head1, head2);
+	node *notcommon = either(common, head1, head2);
+
+	int count1 = count(head);
+	int count2 = count(head1);
+	int count3 = count(head2);
+	int count4 = count(common);
+	int final=count1 -count2 -count3 +count4;
+	cout << "Number of students who like neither vanilla nor butterscotch: " <<final << endl;
+
+	return 0;
 }
