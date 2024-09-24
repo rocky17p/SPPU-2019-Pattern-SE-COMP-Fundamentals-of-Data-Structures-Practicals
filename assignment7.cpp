@@ -1,3 +1,12 @@
+//============================================================================
+// Name        : xyz.cpp
+// Author      : 
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+
 #include<iostream>
 #include<vector>
 using namespace std ;
@@ -16,96 +25,93 @@ class node{
         prev=nullptr;
     }
 };
-node *rows[10];
-void maketheater(){
-    for(int i=0;i<10;i++){
-        node *head= new node(1,i+1);
-        node *temp = head;
-        rows[i]=head;
-        for(int j=2;j<=7;j++){
-            node *nextseat= new node(j,i+1);
-            temp->next= nextseat;
-            nextseat->prev= temp;
-            temp=nextseat;
-        }
-        temp->next=head;
-        head->prev=temp;
-    }
-}
-void displayseats(){
-    for (int i = 0; i < 10; i++)
-    {
-        node *current = rows[i];
-        cout << "Row " << i + 1 << ": ";
-        do
-        {
-            if (!current->isbooked)
-            {
-                cout << current->seatno << " ";
-            }
-            current = current->next;
-        } while (current != rows[i]);
-        cout << endl;
-    }
-}
-void bookseats(int row,vector<int>seatnos){
-        for (int seatno : seatnos)
-    {
+        node *rows[10];
+class theater{
+public:
+	void maketheater(){
+	    for(int i=0;i<10;i++){
+	        node *head= new node(1,i+1);
+	        node *temp = head;
+	        rows[i]=head;
+	        for(int j=2;j<=7;j++){
+	            node *nextseat= new node(j,i+1);
+	            temp->next= nextseat;
+	            nextseat->prev= temp;
+	            temp=nextseat;
+	        }
+	        temp->next=head;
+	        head->prev=temp;
+	    }
+	}
+	void displayseats(){
+	    for (int i = 0; i < 10; i++)
+	    {
+	        node *current = rows[i];
+	        cout << "Row " << i + 1 << ": ";
+	        do
+	        {
+	            if (!current->isbooked)
+	            {
+	                cout << current->seatno << " ";
+	            }
+	            current = current->next;
+	        } while (current != rows[i]);
+	        cout << endl;
+	    }
+	}
+	void bookseats(int row,int seatnos){
+		node *current=rows[row-1];
+		int count=0;
+		while(current)
+		{
+			if(!current->isbooked){
+				count++;
+				current=current->next;
+			}
+			else if(current->isbooked){
+				count=0;
+				current=current->next;
 
-        node *current = rows[row - 1];
-        bool found = false;
-        do
-        {
-            if (current->seatno == seatno)
-            {
-                found = true;
-                if (!current->isbooked)
-                {
-                    current->isbooked = true;
-                    cout << "seat " << seatno << " row " << row << " is booked" << endl;
-                }
-                else
-                {
-                    cout << "the seat is already booked" << endl;
-                }
-                break;
-            }
-            current = current->next;
-        } while (current != rows[row - 1]);
-        if (!found)
-        {
-            cout << "seat not found" << endl;
-        }
-    }
-
-}
-void cancelseat(int row, int seatno)
-{
-    node *current = rows[row - 1];
-    bool found = false;
-    do
-    {
-        if (current->seatno == seatno)
-        {
-            found = true;
-            if (current->isbooked)
-            {
-                current->isbooked = false;
-                cout << "seat" << seatno << "row" << row << " booking cancelled" << endl;
-            }
-            else
-            {
-                cout << "the seat is not booked" << endl;
-            }
-        }
-    } while (current != rows[row - 1]);
-    if (!found)
-    {
-        cout << "seat not found" << endl;
-    }
-}
+			}
+			if(count==seatnos){
+				break;
+			}
+		}
+		current=current->prev;
+		while(count--){
+			current->isbooked=true;
+			current=current->prev;
+		}
+	}
+	void cancelseat(int row, int seatno)
+	{
+	    node *current = rows[row - 1];
+	    bool found = false;
+	    do
+	    {
+	        if (current->seatno == seatno)
+	        {
+	            found = true;
+	            if (current->isbooked)
+	            {
+	                current->isbooked = false;
+	                cout << "seat" << seatno << "row" << row << " booking cancelled" << endl;
+	            }
+	            else
+	            {
+	                cout << "the seat is not booked" << endl;
+	            }
+	        }
+	    } while (current != rows[row - 1]);
+	    if (!found)
+	    {
+	        cout << "seat not found" << endl;
+	    }
+	}
+};
 int main () {
-    maketheater();
+	theater t;
+    t.maketheater();
     int choice;
     int rowno,seatno;
     do
@@ -120,19 +126,13 @@ int main () {
         {
         case 1:{
 
-            vector<int> seatnos;
             cout << "enter the row no(1-10)" << endl;
             cin >> rowno;
-            int seats;
+            int noseats;
             cout << "enter the no of seats to book" << endl;
-            cin >> seats;
-            for (int i = 0; i < seats; i++)
-            {
-                cout << "enter the seat number(1-7):" << endl;
-                cin >> seatno;
-                seatnos.push_back(seatno);
-            }
-            bookseats(rowno, seatnos);
+            cin >> noseats;
+
+            t.bookseats(rowno,noseats);
             break;
         }
         case 2:
@@ -140,10 +140,10 @@ int main () {
             cin >> rowno;
             cout << "enter the seat number(1-7):" << endl;
             cin >> seatno;
-            cancelseat(rowno, seatno);
+            t.cancelseat(rowno, seatno);
             break;
         case 3:
-            displayseats();
+            t.displayseats();
             break;
         case 4:
             exit(0);
