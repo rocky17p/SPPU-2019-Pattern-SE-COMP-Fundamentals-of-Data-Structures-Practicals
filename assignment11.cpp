@@ -9,12 +9,12 @@ public:
     int start = -1;
     int end = -1;
 
-    Queue(int size) {   // Constructor to initialize the queue with user-specified size
+    Queue(int size) {  
         maxSize = size;
         q = new int[maxSize];
     }
 
-    ~Queue() {   // Destructor to free the dynamically allocated memory
+    ~Queue() {   
         delete[] q;
     }
 
@@ -80,7 +80,7 @@ int main() {
     cout << "Enter the size of the queue: ";
     cin >> queueSize;
 
-    Queue q1(queueSize);  // Create a queue with the user-specified size
+    Queue q1(queueSize);  
 
     do {
         cout << "Menu" << endl;
