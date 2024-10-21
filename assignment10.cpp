@@ -1,25 +1,20 @@
-//============================================================================
-// Name        : assignment9.cpp
-// Author      : 
-// Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
-//============================================================================
 #include <iostream>
 #include <vector>
+#include <cctype> // for isdigit
+#include <cstdlib> // for atoi
 using namespace std;
 
 class stackmaker {
 public:
     int top = -1;
     int arraysize;
-    char* array;
+    int* array; // Change array to int for evaluation of numbers
 
     string inputarray() {
         string s;
-        cout << "Enter the string: " << endl;
+        cout << "Enter the expression: " << endl;
         cin >> s;
-        cout << "Entered string is: " << s << endl;
+        cout << "Entered expression is: " << s << endl;
         return s;
     }
 
@@ -36,26 +31,18 @@ public:
 
     void initializearray(int size) {
         arraysize = (size/2)+5;
-        array = new char[arraysize];
+        array = new int[arraysize]; // Initialize array to handle integers
     }
 
     bool isfull() {
-        if (top == arraysize - 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return top == arraysize - 1;
     }
 
     bool isempty() {
-        if (top == -1) {
-            return true;
-        } else {
-            return false;
-        }
+        return top == -1;
     }
 
-    void push(char data) {
+    void push(int data) { // Change data type to int for evaluation
         if (!isfull()) {
             array[++top] = data;
         } else {
@@ -63,12 +50,12 @@ public:
         }
     }
 
-    char pop() {
+    int pop() { // Change return type to int
         if (!isempty()) {
             return array[top--];
         } else {
             cout << "The stack is already empty" << endl;
-            return '\0';
+            return -1;
         }
     }
 
@@ -76,8 +63,7 @@ public:
         for (int i = 0; i < s.size(); i++) {
             if (s[i] == '(' || s[i] == '{' || s[i] == '[') {
                 push(s[i]);
-            } else if (s[i] == ')' || s[i] == '}' || s[i] == ']')
-            {
+            } else if (s[i] == ')' || s[i] == '}' || s[i] == ']') {
                 if (isempty()) return false;
                 char ch = pop();
                 if ((s[i] == ')' && ch != '(') ||
@@ -85,60 +71,87 @@ public:
                     (s[i] == ']' && ch != '[')) {
                     return false;
                 }
-        }
+            }
         }
         return isempty();
     }
+
     int precedence(char op) {
-            if (op == '+' || op == '-') return 1;
-            if (op == '*' || op == '/') return 2;
-            return 0;
+        if (op == '+' || op == '-') return 1;
+        if (op == '*' || op == '/') return 2;
+        return 0;
     }
-    void infixtopostfix(string &s)
-    {
-    	vector<char> ans;
-    	for(int i=0;i<s.size();i++)
-    	{
-    		if (s[i] == '(' || s[i] == '{' || s[i] == '[')
-    		{
-    			push(s[i]);
-    		}
-    		else if (s[i] == ')' || s[i] == '}' || s[i] == ']')
-			{
-    			while (array[top] != '(' && array[top] != '{' && array[top] != '[')
-    			{
-    				char ch=pop();
-    				ans.push_back(ch);
-    			}
-    			pop();
-    		}
-    		 else if (s[i] == '+' || s[i] == '-' || s[i] == '/' || s[i] == '*') {
-    			 while (!isempty() && array[top] != '(' && array[top] != '{' && array[top] != '['
-    			                    && precedence(array[top]) >= precedence(s[i])) {
-    		                    char ch = pop();
-    		                    ans.push_back(ch);
-    		                }
-    		                push(s[i]);
-    		            }
-    		else{
-    			ans.push_back(s[i]);
-    		}
-    	}
-    	for(auto s:ans){
-    		cout<<s<<"";
-    	}
+
+    void infixtopostfix(string &s, vector<char> &ans) {
+        for (int i = 0; i < s.size(); i++) {
+            if (s[i] == '(' || s[i] == '{' || s[i] == '[') {
+                push(s[i]);
+            } else if (s[i] == ')' || s[i] == '}' || s[i] == ']') {
+                while (array[top] != '(' && array[top] != '{' && array[top] != '[') {
+                    char ch = pop();
+                    ans.push_back(ch);
+                }
+                pop(); // remove '(' or '{' or '['
+            } else if (s[i] == '+' || s[i] == '-' || s[i] == '/' || s[i] == '*') {
+                while (!isempty() && array[top] != '(' && array[top] != '{' && array[top] != '['
+                       && precedence(array[top]) >= precedence(s[i])) {
+                    char ch = pop();
+                    ans.push_back(ch);
+                }
+                push(s[i]);
+            } else {
+                ans.push_back(s[i]); // if it's a number/variable
+            }
+        }
+
+        while (!isempty()) {
+            char ch = pop();
+            ans.push_back(ch);
+        }
+    }
+
+    int evaluatePostfix(vector<char> &postfix) {
+        // Evaluate using the same stackmaker class but pushing integers now
+        for (int i = 0; i < postfix.size(); i++) {
+            if (isdigit(postfix[i])) {
+                push(postfix[i] - '0'); // Convert char to int and push
+            } else {
+                int val2 = pop();
+                int val1 = pop();
+
+                switch (postfix[i]) {
+                    case '+': push(val1 + val2); break;
+                    case '-': push(val1 - val2); break;
+                    case '*': push(val1 * val2); break;
+                    case '/': push(val1 / val2); break;
+                }
+            }
+        }
+        return pop(); // The final result
     }
 };
+
 int main() {
     stackmaker st;
     string s = st.inputarray();
     int size = st.countbracket(s);
     st.initializearray(size);
+
     if (st.checkbalanced(s)) {
         cout << "The equation is balanced" << endl;
-        st.infixtopostfix(s);
+        vector<char> postfix;
+        st.infixtopostfix(s, postfix);
+        cout << "Postfix expression: ";
+        for (char ch : postfix) {
+            cout << ch;
+        }
+        cout << endl;
+
+        int result = st.evaluatePostfix(postfix);
+        cout << "Evaluation result: " << result << endl;
     } else {
         cout << "The equation is not balanced" << endl;
     }
+
     return 0;
 }
