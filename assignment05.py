@@ -26,25 +26,19 @@ class Sorting:
                 passes+=1
         return array,passes
 
-    def insertionsort(self, array):
-        sorted_array = [array[0]]
-        print(sorted_array)
-        passes = 0
-        for i in range(1, self.size):
-            inserted = False
-            if passes > 0:
-                print(f"{passes}:", sorted_array)
-            for j in range(passes + 1):
-                if array[i] < sorted_array[j]:
-                    sorted_array = sorted_array[:j] + [array[i]] + sorted_array[j:]
-                    inserted = True
-                    break
-            if not inserted:
-                sorted_array = sorted_array + [array[i]]
-            passes += 1
-        print(f"{passes}:", sorted_array)
-        return sorted_array, passes
-
+   def insertionsort(self,array):
+    passes=0
+    for i in range(self.size):
+        j=i
+        while(j>0 and array[j-1]>array[j]):
+            temp=array[j-1]
+            array[j-1]=array[j]
+            array[j]=temp
+            j=j-1
+        passes+=1
+        print(f"{passes}:",array)
+    return array
+    
     def shellsort(self, array):
         gap = self.size // 2
         passes = 0
