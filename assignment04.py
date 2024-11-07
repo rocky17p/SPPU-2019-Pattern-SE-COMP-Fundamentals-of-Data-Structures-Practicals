@@ -42,47 +42,31 @@ class search:
                 high=mid-1
         return -1
 
-    def FibonacciGenerator(self,n):
-        if n < 1:
-            return 0
-        elif n == 1:
-            return 1
+   def fibonacci(self,array,key,n):
+    b=0
+    a=1
+    f=a+b
+    while(f<n):
+        b=a
+        a=f
+        f=b+a
+    offset=-1
+    while(f>1):
+        i=min(offset+b,n-1)
+        if(array[i]<key):
+            f=a 
+            a=b
+            b=f-a
+            offset=i
+        elif(array[i]>key):
+            f=b
+            a=a-b
+            b=f-a
         else:
-            return self.FibonacciGenerator(n - 1) + self.FibonacciGenerator(n - 2)
-
-# return the index at which x exists inside arr
-# return -1 otherwise
-
-    def FibonacciSearch(self,arr, x):
-
-    # find the smallest Fibonacci number greater than or equal
-    # to the length of arr
-        m = 0 
-        while self.FibonacciGenerator(m) < self.size:
-            m = m + 1 
-
-        offset = -1
-        while (self.FibonacciGenerator(m) > 1):
-            if((offset+self.FibonacciGenerator(m-2))>self.size-1):
-                i=self.size-1
-            else:
-                i=offset+self.FibonacciGenerator(m-2)
-
-            if (x > arr[i]):
-                m = m - 1
-                offset = i
-
-            elif (x < arr[i]):
-                m = m - 2
-
-            else:
-                return i
-    # this will run if there is one last element left
-        if(slef.FibonacciGenerator(m - 1) and arr[offset + 1] == x):
-            return offset + 1
-
-    # return -1 if the element doesn't exist in the array
-        return -1
+            return i
+    if(a and array[offset+1]==key):
+        return offset+1
+    return -1
 key=int(input("enter the roll no that is to be found "))
 size=int(input("enter the no of students "))
 obj=search(size,key)
